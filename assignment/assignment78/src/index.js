@@ -70,11 +70,7 @@ function paintPending(text) {
     savePending();
 }
 
-function addToFinished(event) {
-    const btn = event.target;
-    const li = btn.parentNode;
-    const spanText = li.childNodes[0].innerText;
-
+function paintFinished(text) {
     const liFinished = document.createElement("li");
     const backBtn = document.createElement("button");
     const finishedSpan = document.createElement("span");
@@ -83,18 +79,26 @@ function addToFinished(event) {
     backBtn.innerText = "⏪";
     backBtn.addEventListener("click", revertToPending);
 
-    finishedSpan.innerText = spanText;
+    finishedSpan.innerText = text;
     liFinished.appendChild(finishedSpan);
     liFinished.appendChild(backBtn);
     liFinished.id = newId;
     finishedList.appendChild(liFinished);
 
     const toDoObj = {
-        text: spanText,
+        text: text,
         id: newId
     };
     FINISHED.push(toDoObj);
-    saveFinished();
+    saveFinished(); 
+}
+
+function addToFinished(event){
+    const btn = event.target;
+    const li = btn.parentNode;
+    const spanText = li.childNodes[0].innerText;
+
+    paintFinished(spanText);
     deletePending(event);
 }
 
@@ -110,7 +114,6 @@ function revertToPending(event){
 function handleSubmit() {
     event.preventDefault();
     const currentValue = toDoInput.value;
-    console.log(currentValue);
     paintPending(currentValue);
 }
 
@@ -124,19 +127,19 @@ function loadPending() {
     }
 }
 
-// function loadFinished() {
-//     const loadFinished = localStorage.getItem(PENDING_LS);
-//     if (loadFinished !== null) {
-//         const parsedFinished = JSON.parse(loadFinished);
-//         parsedFinished.forEach(function (toDo) {
-//             paintFinished(toDo.text);
-//         });
-//     }
-// }
+function loadFinished() {
+    const loadFinished = localStorage.getItem(FINISHED_LS);
+    if (loadFinished !== null) {
+        const parsedFinished = JSON.parse(loadFinished);
+        parsedFinished.forEach(function (toDo) {
+            paintFinished(toDo.text);
+        });
+    }
+}
 
 function init() {
     loadPending();
-    // loadFinished();
+    loadFinished();
     toDoForm.addEventListener("submit", handleSubmit);
 }
 init();
