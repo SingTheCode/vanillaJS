@@ -11,7 +11,6 @@ function paintImage(imgNumber){
 
 function getRandom(){
     const number = Math.floor(Math.random() * IMG_NUM);
-    console.log(number);
     return number;
 }
 
